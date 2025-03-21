@@ -74,14 +74,18 @@ const Home = () => {
   };
 
   const logout = async () => {
-    await axios.post("http://localhost:3002/auth/logout", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    await axios.post(
+      "http://localhost:3002/auth/logout",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
     localStorage.removeItem("token");
     localStorage.removeItem("refreshToken");
-    navigate("/login");
+    navigate("/auth/login");
   };
 
   useEffect(() => {
