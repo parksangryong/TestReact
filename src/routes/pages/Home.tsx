@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm, FieldValues } from "react-hook-form";
 import { jwtDecode } from "jwt-decode";
 import BoardList from "../../components/BoardList";
+import FullInput from "../../components/FullInput";
+import { PrimaryButton } from "mirr-ui";
 
 type JwtPayload = {
   userId: number;
@@ -14,7 +16,7 @@ const Home = () => {
     { id: number; title: string; content: string; userId: number }[]
   >([]);
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const userId = jwtDecode(localStorage.getItem("token") || "") as JwtPayload;
 
   const getBoards = async () => {
@@ -45,6 +47,7 @@ const Home = () => {
       },
     });
     getBoards();
+    reset();
   };
 
   const handleDelete = async (id: number) => {
@@ -93,7 +96,14 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        padding: "10px",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+      }}
+    >
       <button
         style={{
           width: "50px",
@@ -118,23 +128,50 @@ const Home = () => {
       >
         Logout
       </button>
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input {...register("title")} />
-          <input {...register("content")} />
-          <button type="submit">Write Boards</button>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          paddingBottom: "15px",
+          marginBottom: "15px",
+          borderBottom: "2px solid var(--color-primary)",
+        }}
+      >
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          <FullInput {...register("title")} placeholder="제목" />
+          <FullInput {...register("content")} placeholder="내용" />
+          <PrimaryButton theme="social" onClick={handleSubmit(onSubmit)}>
+            Write Boards
+          </PrimaryButton>
         </form>
       </div>
-      <h1>Boards</h1>
-      {boards.map((board) => (
-        <BoardList
-          key={board.id}
-          board={board}
-          handleDelete={(id) => handleDelete(id)}
-          handleUpdate={(id, data) => handleUpdate(id, data)}
-          userId={userId.userId}
-        />
-      ))}
+      <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Boards</h1>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          overflow: "auto",
+          height: "100%",
+        }}
+      >
+        {boards.map((board) => (
+          <BoardList
+            key={board.id}
+            board={board}
+            handleDelete={(id) => handleDelete(id)}
+            handleUpdate={(id, data) => handleUpdate(id, data)}
+            userId={userId.userId}
+          />
+        ))}
+      </div>
     </div>
   );
 };
