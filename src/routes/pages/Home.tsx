@@ -95,6 +95,23 @@ const Home = () => {
   return (
     <div>
       <button
+        style={{
+          width: "50px",
+          height: "50px",
+          borderRadius: "30px",
+          backgroundColor: "var(--color-primary)",
+          color: "white",
+          border: "none",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          fontSize: "10px",
+          fontWeight: "bold",
+          cursor: "pointer",
+        }}
         onClick={() => {
           logout();
         }}

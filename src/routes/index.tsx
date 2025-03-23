@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+import "mirr-ui/styles";
+
 const loader = () => {
   const token = localStorage.getItem("token");
   if (!token) {
