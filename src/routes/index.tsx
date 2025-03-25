@@ -11,8 +11,12 @@ import DefaultLayout from "./layouts/Default";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import BoardDetail from "./pages/BoardDetail";
 
+// styles
 import "mirr-ui/styles";
+import "@fontsource/noto-sans/400.css"; // Specify weight
+import "@fontsource/noto-sans/400-italic.css"; // Specify weight and style
 
 const loader = () => {
   const token = localStorage.getItem("token");
@@ -38,6 +42,10 @@ const router = createBrowserRouter([
       {
         element: <Home />,
         index: true,
+      },
+      {
+        element: <BoardDetail />,
+        path: "board/:id",
       },
     ],
   },

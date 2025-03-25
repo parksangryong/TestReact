@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 type BoardListProps = {
   board: { id: number; title: string; content: string; userId: number };
   handleDelete: (id: number) => void;
@@ -22,6 +22,7 @@ const BoardList = ({ board, handleDelete, handleUpdate }: BoardListProps) => {
     title: board.title,
     content: board.content,
   });
+  const navigate = useNavigate();
 
   return (
     <div
@@ -54,17 +55,50 @@ const BoardList = ({ board, handleDelete, handleUpdate }: BoardListProps) => {
               }
             />
           ) : (
-            <span
+            <div
               style={{
-                fontSize: "18px",
-                fontWeight: "bold",
                 display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
                 gap: "10px",
                 flex: 1,
               }}
             >
-              {board.id}. {board.title}
-            </span>
+              <span
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  display: "flex",
+                  gap: "10px",
+                  flex: 1,
+                }}
+              >
+                {board.id}. {board.title}
+              </span>
+              <button
+                onClick={() => {
+                  navigate(`/board/${board.id}`, {
+                    state: {
+                      title: board.title,
+                      content: board.content,
+                    },
+                  });
+                }}
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "regular",
+                  backgroundColor: "#695997",
+                  color: "white",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  border: "none",
+                }}
+              >
+                상세보기
+              </button>
+            </div>
           )}
         </h2>
         <p>
