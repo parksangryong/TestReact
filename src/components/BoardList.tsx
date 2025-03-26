@@ -4,19 +4,15 @@ type BoardListProps = {
   board: { id: number; title: string; content: string; userId: number };
   handleDelete: (id: number) => void;
   handleUpdate: (id: number, data: { title: string; content: string }) => void;
-  userId: number;
 };
 
-import { jwtDecode } from "jwt-decode";
 import { PrimaryButton } from "mirr-ui";
 import FullInput from "./FullInput";
-
-type JwtPayload = {
-  userId: number;
-};
+import { getData } from "../utils/AsyncStorage";
+import { USER_ID_KEY } from "../services/config/config";
 
 const BoardList = ({ board, handleDelete, handleUpdate }: BoardListProps) => {
-  const userId = jwtDecode(localStorage.getItem("token") || "") as JwtPayload;
+  const userId = getData(USER_ID_KEY)?.idx;
   const [isUpdate, setIsUpdate] = useState(false);
   const [updateText, setUpdateText] = useState({
     title: board.title,
@@ -118,7 +114,7 @@ const BoardList = ({ board, handleDelete, handleUpdate }: BoardListProps) => {
           )}
         </p>
       </div>
-      {board.userId === userId.userId && (
+      {board.userId === Number(userId) && (
         <div
           style={{
             display: "flex",

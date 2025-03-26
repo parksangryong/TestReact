@@ -9,16 +9,16 @@ import { CONTENT_TYPE, API_URL, TIMEOUT, TOKEN_KEY } from "./config";
 
 // utils
 import { getData } from "../../utils/AsyncStorage";
+import { fetchRefreshAccessToken } from "../api/jwtService";
 
 /** headers에 액세스, 리프레시 토큰 삽입 */
 const setCommonHeaders = async (
   config: InternalAxiosRequestConfig
 ): Promise<InternalAxiosRequestConfig> => {
   // 토큰이 없으면 reject 되게끔 담지 않도록한다.
-  const token = await getData(TOKEN_KEY);
+  const accessToken = await getData(TOKEN_KEY);
 
-  if (token !== undefined) {
-    const { accessToken } = token;
+  if (accessToken !== undefined) {
     config.headers.authorization = `Bearer ${accessToken}`;
   }
 
@@ -36,14 +36,15 @@ const handleResponseError = async (
 ): Promise<AxiosResponse | undefined> => {
   // 서버에서 전달하는 에러 핸들링(errorCode가 정해지면 코드에 맞게 처리하는 코드 생성필요)
   const { code } = err.response?.data as AxiosError;
-  console.log(code);
+  if (code) {
+    return;
+  }
   switch (code) {
     case "JWT-001":
-      //   await fetchRefreshAccessToken();
-      console.log("JWT-001");
-      return err.response as AxiosResponse;
+      return fetchRefreshAccessToken();
+
     default:
-      await Promise.reject(err);
+      return Promise.reject(err);
   }
 };
 

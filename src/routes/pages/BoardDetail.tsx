@@ -1,20 +1,67 @@
 import { useParams, useLocation } from "react-router-dom";
 import FullInput from "../../components/FullInput";
 import { PrimaryButton } from "mirr-ui";
+import {
+  fetchCommentList,
+  fetchCommentCreate,
+  fetchCommentDelete,
+  fetchCommentUpdate,
+} from "../../services/api/commentService";
+import { useEffect, useState } from "react";
+import CommentList from "../../components/CommentList";
+import { getData } from "../../utils/AsyncStorage";
+import { USER_ID_KEY } from "../../services/config/config";
+
+type Comment = {
+  id: number;
+  content: string;
+  userId: number;
+  boardId: number;
+};
 
 const BoardDetail = () => {
   const { id } = useParams();
   const { title, content } = useLocation().state;
+  const [commentList, setCommentList] = useState<Comment[]>([]);
+  const [comment, setComment] = useState("");
+  const userId = getData(USER_ID_KEY)?.idx;
 
-  const getCommentList = () => {};
+  const getCommentList = async () => {
+    const params = {
+      offset: 0,
+      count: 10,
+    };
+    const response = await fetchCommentList(params);
+    setCommentList(response.commentList);
+  };
 
-  const createComment = () => {};
+  const createComment = async () => {
+    await fetchCommentCreate({
+      boardId: Number(id),
+      content: comment,
+      userId: Number(userId),
+    });
+    setComment("");
+    getCommentList();
+  };
 
-  const deleteComment = () => {};
+  const deleteComment = async (commentId: number) => {
+    await fetchCommentDelete(commentId);
+    getCommentList();
+  };
 
-  const updateComment = () => {};
+  const updateComment = async (commentId: number, content: string) => {
+    await fetchCommentUpdate(commentId, {
+      content: content,
+      userId: Number(userId),
+      boardId: Number(id),
+    });
+    getCommentList();
+  };
 
-  console.log(id);
+  useEffect(() => {
+    getCommentList();
+  }, []);
 
   return (
     <div
@@ -52,8 +99,13 @@ const BoardDetail = () => {
           flexDirection: "column",
         }}
       >
-        <FullInput type="text" placeholder="댓글을 입력하세요" />
-        <PrimaryButton onClick={() => {}} theme="social">
+        <FullInput
+          type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="댓글을 입력하세요"
+        />
+        <PrimaryButton onClick={createComment} theme="social">
           댓글 작성
         </PrimaryButton>
       </div>
@@ -66,11 +118,14 @@ const BoardDetail = () => {
           paddingTop: "30px",
         }}
       >
-        <p>댓글</p>
-        <p>댓글</p>
-        <p>댓글</p>
-        <p>댓글</p>
-        <p>댓글</p>
+        {commentList.map((comment) => (
+          <CommentList
+            key={comment.id}
+            comment={comment}
+            handleDelete={deleteComment}
+            handleUpdate={updateComment}
+          />
+        ))}
       </div>
     </div>
   );

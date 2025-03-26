@@ -1,15 +1,19 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm, FieldValues } from "react-hook-form";
-import { jwtDecode } from "jwt-decode";
 import BoardList from "../../components/BoardList";
 import FullInput from "../../components/FullInput";
 import { PrimaryButton } from "mirr-ui";
 
-type JwtPayload = {
-  userId: number;
-};
+import {
+  fetchBoardCreate,
+  fetchBoardDelete,
+  fetchBoardList,
+  fetchBoardUpdate,
+} from "../../services/api/boardService";
+import { fetchLogout } from "../../services/api/authService";
+import { getData } from "../../utils/AsyncStorage";
+import { USER_ID_KEY } from "../../services/config/config";
 
 const Home = () => {
   const [boards, setBoards] = useState<
@@ -17,45 +21,32 @@ const Home = () => {
   >([]);
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
-  const userId = jwtDecode(localStorage.getItem("token") || "") as JwtPayload;
+  const userId = getData(USER_ID_KEY)?.idx;
 
   const getBoards = async () => {
     const params = {
       offset: 0,
       count: 30,
     };
-    const response = await axios.get(
-      `http://localhost:3002/boards?offset=${params.offset}&count=${params.count}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    setBoards(response.data.boardList);
+    const response = await fetchBoardList(params);
+    setBoards(response.boardList);
   };
 
   const onSubmit = async (data: FieldValues) => {
+    console.log(userId);
+
     const params = {
       title: data.title,
       content: data.content,
-      userId: userId.userId,
+      userId: Number(userId),
     };
-    await axios.post("http://localhost:3002/boards", params, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    await fetchBoardCreate(params);
     getBoards();
     reset();
   };
 
   const handleDelete = async (id: number) => {
-    await axios.delete(`http://localhost:3002/boards/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    await fetchBoardDelete(id);
     getBoards();
   };
 
@@ -64,30 +55,16 @@ const Home = () => {
     data: { title: string; content: string }
   ) => {
     const params = {
-      userId: userId.userId,
+      userId: Number(userId),
       title: data.title,
       content: data.content,
     };
-    await axios.patch(`http://localhost:3002/boards/${id}`, params, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    await fetchBoardUpdate(id, params);
     getBoards();
   };
 
   const logout = async () => {
-    await axios.post(
-      "http://localhost:3002/auth/logout",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
+    await fetchLogout();
     navigate("/auth/login");
   };
 
@@ -168,7 +145,6 @@ const Home = () => {
             board={board}
             handleDelete={(id) => handleDelete(id)}
             handleUpdate={(id, data) => handleUpdate(id, data)}
-            userId={userId.userId}
           />
         ))}
       </div>

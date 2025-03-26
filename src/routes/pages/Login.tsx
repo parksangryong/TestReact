@@ -1,22 +1,20 @@
 import { useForm, FieldValues } from "react-hook-form";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PrimaryButton } from "mirr-ui";
 import FullInput from "../../components/FullInput";
+import { fetchLogin } from "../../services/api/authService";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data: FieldValues) => {
-    const response = await axios.post("http://localhost:3002/auth/login", {
+    const params = {
       email: data.email,
       password: data.password,
-    });
+    };
 
-    localStorage.setItem("token", response.data.accessToken);
-    localStorage.setItem("refreshToken", response.data.refreshToken);
-
+    await fetchLogin(params);
     navigate("/");
   };
 

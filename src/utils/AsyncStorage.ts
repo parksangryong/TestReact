@@ -1,7 +1,4 @@
-export const storeData = async (
-  key: string,
-  value: Record<string, string>
-): Promise<void> => {
+export const storeData = (key: string, value: Record<string, string>) => {
   try {
     const stringValue = JSON.stringify(value);
     localStorage.setItem(key, stringValue);
@@ -10,9 +7,7 @@ export const storeData = async (
   }
 };
 
-export const getData = async (
-  key: string
-): Promise<Record<string, string> | undefined> => {
+export const getData = (key: string): Record<string, string> | undefined => {
   try {
     const value = localStorage.getItem(key);
     if (value !== null) {
@@ -26,7 +21,7 @@ export const getData = async (
   }
 };
 
-export const removeData = async (key: string): Promise<void> => {
+export const removeData = (key: string) => {
   try {
     localStorage.removeItem(key);
   } catch (err) {
@@ -34,7 +29,7 @@ export const removeData = async (key: string): Promise<void> => {
   }
 };
 
-export const containsKey = async (key: string): Promise<boolean> => {
+export const containsKey = (key: string) => {
   try {
     const keys = localStorage.getAllKeys();
     return keys.includes(key);

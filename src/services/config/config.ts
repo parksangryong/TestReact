@@ -1,4 +1,6 @@
 export const TOKEN_KEY = "token";
+export const REFRESH_TOKEN_KEY = "refreshToken";
+export const USER_ID_KEY = "userId";
 
 export const API_URL = "http://localhost:3002";
 
@@ -13,6 +15,7 @@ export const API_ENDPOINTS = {
     LOGIN: "/auth/login",
     REGISTER: "/auth/register",
     LOGOUT: "/auth/logout",
+    REFRESH: "/auth/refresh",
   },
   BOARD: {
     LIST: "/boards",
@@ -28,7 +31,6 @@ export const API_ENDPOINTS = {
   },
   USER: {
     LIST: "/users",
-    REGISTER: "/users",
   },
   UPLOAD: {
     FILE: "/uploads",

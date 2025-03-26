@@ -1,16 +1,12 @@
-import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
+import { AxiosError, type AxiosRequestConfig } from "axios";
 import instance from "./instance";
-
-interface RequestData {
-  [key: string]: unknown;
-}
 
 /** POST(url, data) */
 export const post = async (
   url: string,
-  data?: RequestData,
+  data?: unknown,
   config?: AxiosRequestConfig
-): Promise<AxiosResponse["data"]> => {
+) => {
   try {
     const response = await instance.post(url, data, config);
     return response.data;
@@ -24,10 +20,7 @@ export const post = async (
 };
 
 /** GET(url, data) */
-export const get = async (
-  url: string,
-  data?: RequestData
-): Promise<AxiosResponse["data"]> => {
+export const get = async (url: string, data?: Record<string, unknown>) => {
   try {
     const response = await instance.get(url, {
       params: {
@@ -45,10 +38,7 @@ export const get = async (
 };
 
 /** PUT(url, data) */
-export const put = async (
-  url: string,
-  data?: RequestData
-): Promise<AxiosResponse["data"]> => {
+export const put = async (url: string, data?: unknown) => {
   try {
     const response = await instance.put(url, data);
     return response.data;
@@ -62,10 +52,7 @@ export const put = async (
 };
 
 /** PUT(url, data) */
-export const patch = async (
-  url: string,
-  data?: RequestData
-): Promise<AxiosResponse["data"]> => {
+export const patch = async (url: string, data?: unknown) => {
   try {
     const response = await instance.patch(url, data);
     return response.data;
@@ -79,10 +66,7 @@ export const patch = async (
 };
 
 /** DELETE(url, data) */
-export const del = async (
-  url: string,
-  data?: RequestData
-): Promise<AxiosResponse["data"]> => {
+export const del = async (url: string, data?: unknown) => {
   try {
     const response = await instance.delete(url, {
       data,
