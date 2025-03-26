@@ -18,7 +18,6 @@ interface FetchBoardCreateParams extends Record<string, unknown> {
 }
 
 export const fetchBoardCreate = async (params: FetchBoardCreateParams) => {
-  console.log(params);
   const response = await post(API_ENDPOINTS.BOARD.CREATE, params);
   return response;
 };

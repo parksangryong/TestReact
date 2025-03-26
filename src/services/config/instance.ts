@@ -36,13 +36,16 @@ const handleResponseError = async (
 ): Promise<AxiosResponse | undefined> => {
   // 서버에서 전달하는 에러 핸들링(errorCode가 정해지면 코드에 맞게 처리하는 코드 생성필요)
   const { code } = err.response?.data as AxiosError;
-  if (code) {
+
+  if (!code) {
     return;
   }
+
+  console.log(code);
   switch (code) {
     case "JWT-001":
-      return fetchRefreshAccessToken();
-
+      await fetchRefreshAccessToken();
+      break;
     default:
       return Promise.reject(err);
   }

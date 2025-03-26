@@ -33,8 +33,6 @@ const Home = () => {
   };
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(userId);
-
     const params = {
       title: data.title,
       content: data.content,
