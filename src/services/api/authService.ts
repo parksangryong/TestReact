@@ -47,5 +47,6 @@ export const fetchLogout = async () => {
   removeData(TOKEN_KEY);
   removeData(REFRESH_TOKEN_KEY);
   removeData(USER_ID_KEY);
+  window.location.reload();
   return response;
 };

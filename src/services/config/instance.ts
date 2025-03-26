@@ -34,7 +34,7 @@ const handleRequestError = async (err: AxiosError): Promise<void> => {
 const handleResponseError = async (
   err: AxiosError
 ): Promise<AxiosResponse | undefined> => {
-  // 서버에서 전달하는 에러 핸들링(errorCode가 정해지면 코드에 맞게 처리하는 코드 생성필요)
+  const originalRequest = err.config; // 원래 요청 설정 저장
   const { code } = err.response?.data as AxiosError;
 
   if (!code) {
@@ -44,7 +44,15 @@ const handleResponseError = async (
   console.log(code);
   switch (code) {
     case "JWT-001":
-      await fetchRefreshAccessToken();
+      try {
+        await fetchRefreshAccessToken();
+        // 토큰 리프레시 성공 후 원래 요청 재시도
+        if (originalRequest) {
+          return instance(originalRequest);
+        }
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
       break;
     default:
       return Promise.reject(err);

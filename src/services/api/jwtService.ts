@@ -41,6 +41,7 @@ export const fetchRefreshAccessToken = async () => {
         removeData(TOKEN_KEY);
         removeData(REFRESH_TOKEN_KEY);
         removeData(USER_ID_KEY);
+        window.location.reload();
       }
     }
   }
