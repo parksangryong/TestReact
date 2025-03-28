@@ -167,6 +167,7 @@ const BoardDetail = () => {
                 fontFamily: "Bungee Inline",
                 position: "relative",
                 top: "1px",
+                whiteSpace: "nowrap",
               }}
             >
               Title :
@@ -201,6 +202,7 @@ const BoardDetail = () => {
                 fontFamily: "Bungee Inline",
                 position: "relative",
                 top: "7px",
+                whiteSpace: "nowrap",
               }}
             >
               Content :
