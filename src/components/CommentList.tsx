@@ -29,7 +29,7 @@ const CommentList = ({
     <div
       key={comment.id}
       style={{
-        border: "1px solid black",
+        border: "2px solid #dd0000",
         display: "flex",
         flexDirection: "column",
         borderRadius: "10px",
