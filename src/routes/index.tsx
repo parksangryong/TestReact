@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import BoardDetail from "./pages/BoardDetail";
+import ImageList from "./pages/ImageList";
+import Setting from "./pages/Setting";
 
 // styles
 import "mirr-ui/styles";
@@ -50,6 +52,14 @@ const router = createBrowserRouter([
       {
         element: <BoardDetail />,
         path: "board/:id",
+      },
+      {
+        element: <ImageList />,
+        path: "image",
+      },
+      {
+        element: <Setting />,
+        path: "setting",
       },
     ],
   },
