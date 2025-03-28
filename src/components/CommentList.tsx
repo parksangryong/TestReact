@@ -46,7 +46,7 @@ const CommentList = ({
           padding: "5px 10px",
         }}
       >
-        <p>
+        <div>
           {isUpdate ? (
             <FullInput
               type="text"
@@ -71,7 +71,7 @@ const CommentList = ({
               </span>
             </div>
           )}
-        </p>
+        </div>
       </div>
       {comment.userId === Number(userId) && (
         <div
