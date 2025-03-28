@@ -36,6 +36,9 @@ export const API_ENDPOINTS = {
     DELETE: "/users/", // id
   },
   UPLOAD: {
-    FILE: "/uploads",
+    FILE: "/files/upload",
+    DOWNLOAD: "/files/download/", // id
+    LIST: "/files/list",
+    DELETE: "/files/", // id
   },
 };

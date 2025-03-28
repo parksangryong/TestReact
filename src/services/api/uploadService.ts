@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from "../config/config";
-import { post } from "../config/request";
+import { post, get, del } from "../config/request";
 
 export const fetchUploadFile = async (file: File, userId: number) => {
   const formData = new FormData();
@@ -11,5 +11,20 @@ export const fetchUploadFile = async (file: File, userId: number) => {
       "Content-Type": "multipart/form-data",
     },
   });
+  return response;
+};
+
+export const fetchDownloadFile = async (id: number) => {
+  const response = await get(API_ENDPOINTS.UPLOAD.DOWNLOAD + id);
+  return response;
+};
+
+export const fetchUploadList = async () => {
+  const response = await get(API_ENDPOINTS.UPLOAD.LIST);
+  return response;
+};
+
+export const fetchDeleteUpload = async (id: number) => {
+  const response = await del(API_ENDPOINTS.UPLOAD.DELETE + id);
   return response;
 };
