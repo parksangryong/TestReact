@@ -101,7 +101,6 @@ const BoardDetail = () => {
         alignItems: "center",
         flex: 1,
         paddingTop: "30px",
-        paddingBottom: "30px",
       }}
     >
       <div
@@ -218,9 +217,15 @@ const BoardDetail = () => {
           gap: 10,
           display: "flex",
           flexDirection: "column",
-          padding: "20px 30px",
+          padding: "30px 30px",
+          backgroundColor: "#F3EBEB",
         }}
       >
+        <p
+          style={{ fontSize: 14, fontFamily: "Bungee Inline", paddingLeft: 10 }}
+        >
+          Comment Wrtie
+        </p>
         <FullInput
           type="text"
           value={comment}
@@ -233,11 +238,14 @@ const BoardDetail = () => {
       </div>
       <div
         style={{
-          width: "90%",
+          width: "100%",
           gap: 5,
           display: "flex",
           flexDirection: "column",
           paddingTop: "30px",
+          backgroundColor: "#F3EBEB",
+          padding: "30px 30px 30px 30px",
+          flex: 1,
         }}
       >
         <p
