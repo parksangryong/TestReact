@@ -14,3 +14,11 @@
 .header-nav-link.active {
   color: #dd0000;
 }
+
+.full-input:focus {
+  outline-color: #dd0000;
+}
+
+.full-input:disabled {
+  outline: none;
+}

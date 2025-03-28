@@ -5,7 +5,7 @@ interface FullInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const FullInput = forwardRef<HTMLInputElement, FullInputProps>(
-  ({ placeholder, ...props }, ref) => {
+  ({ placeholder, disabled, ...props }, ref) => {
     return (
       <input
         style={{
@@ -15,8 +15,13 @@ const FullInput = forwardRef<HTMLInputElement, FullInputProps>(
           width: "100%",
           fontSize: "16px",
           fontWeight: "bold",
-          color: "var(--color-primary)",
+          color: disabled ? "var(--color-gray)" : "var(--color-primary)",
+          backgroundColor: disabled ? "lightGray" : "white",
+          pointerEvents: disabled ? "none" : "auto",
+          cursor: disabled ? "not-allowed" : "text",
+          opacity: disabled ? 0.7 : 1,
         }}
+        className="full-input"
         ref={ref}
         {...props}
         placeholder={placeholder}

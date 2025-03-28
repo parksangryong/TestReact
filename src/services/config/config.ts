@@ -31,6 +31,9 @@ export const API_ENDPOINTS = {
   },
   USER: {
     LIST: "/users",
+    DETAIL: "/users/", // id
+    PATCH: "/users/", // id
+    DELETE: "/users/", // id
   },
   UPLOAD: {
     FILE: "/uploads",
