@@ -27,6 +27,7 @@ const Footer = () => {
         height: "60px",
         display: "flex",
         justifyContent: "space-between",
+        gap: 10,
         backgroundColor: "#440000",
         alignItems: "center",
         padding: "0 20px",
@@ -34,10 +35,28 @@ const Footer = () => {
         color: "#fff",
       }}
     >
-      <input type="file" onChange={handleFileChange} />
-      <SmallButton theme="secondary" onClick={handleUpload}>
-        Upload
+      <input
+        type="file"
+        id="file-input"
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+      />
+      <SmallButton
+        theme="secondary"
+        onClick={() => {
+          document.getElementById("file-input")?.click();
+        }}
+      >
+        File +
       </SmallButton>
+      {file && (
+        <>
+          <p style={{ color: "#fff", fontSize: 10 }}>{file.name}</p>
+          <SmallButton theme="primary" onClick={handleUpload}>
+            Upload
+          </SmallButton>
+        </>
+      )}
     </div>
   );
 };
