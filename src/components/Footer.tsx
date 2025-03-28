@@ -11,6 +11,13 @@ const Footer = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // 이미지 파일 타입 검증
+    if (!file.type.startsWith("image/")) {
+      alert("이미지 파일만 업로드 가능합니다.");
+      return;
+    }
+
     setFile(file);
   };
 
@@ -38,6 +45,7 @@ const Footer = () => {
       <input
         type="file"
         id="file-input"
+        accept="image/*"
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
