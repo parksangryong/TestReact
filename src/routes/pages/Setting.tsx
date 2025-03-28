@@ -83,17 +83,17 @@ const Setting = () => {
         onChange={handleChange("email")}
       />
       <FullInput
-        placeholder="이름"
+        placeholder="Name"
         value={user?.name}
         onChange={handleChange("name")}
       />
       <FullInput
-        placeholder="나이"
+        placeholder="Age"
         value={user?.age}
         onChange={handleChange("age")}
       />
       <FullInput
-        placeholder="비밀번호"
+        placeholder="Password"
         type="password"
         value={user?.password}
         onChange={handleChange("password")}

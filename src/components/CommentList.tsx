@@ -50,7 +50,7 @@ const CommentList = ({
           {isUpdate ? (
             <FullInput
               type="text"
-              placeholder="내용을 입력하세요"
+              placeholder="Comment"
               value={updateText}
               onChange={(e) => setUpdateText(e.target.value)}
             />
