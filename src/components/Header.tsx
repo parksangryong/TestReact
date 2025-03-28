@@ -1,8 +1,20 @@
-import { FaBeer } from "react-icons/fa";
+import { FaBeer, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+import { fetchLogout } from "../services/api/authService";
+
+import { getData } from "../utils/AsyncStorage";
+import { USER_ID_KEY } from "../services/config/config";
+
 const Header = () => {
+  const userId = getData(USER_ID_KEY)?.idx;
   const navigate = useNavigate();
+
+  const logout = async () => {
+    await fetchLogout();
+    navigate("/auth/login");
+  };
+
   return (
     <div
       style={{
@@ -26,7 +38,11 @@ const Header = () => {
       >
         Test-Project
       </span>
-      <FaBeer size={20} color="#dd0000" />
+      {userId ? (
+        <FaSignOutAlt size={20} color="#dd0000" onClick={logout} />
+      ) : (
+        <FaBeer size={20} color="#dd0000" />
+      )}
     </div>
   );
 };
