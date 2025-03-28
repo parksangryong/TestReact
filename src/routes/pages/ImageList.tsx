@@ -7,11 +7,14 @@ import {
 } from "../../services/api/uploadService";
 import { getData } from "../../utils/AsyncStorage";
 import { USER_ID_KEY } from "../../services/config/config";
-
+import dayjs from "dayjs";
 type ListType = {
   id: number;
   userId: string;
   fileUrl: string;
+  fileName: string;
+  fileSize: number;
+  fileType: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -131,14 +134,17 @@ const ImageList = () => {
         style={{
           display: "flex",
           flexDirection: "row",
-          gap: "10px",
+          gap: "20px",
           flexWrap: "wrap",
           justifyContent: "center",
           paddingTop: "30px",
         }}
       >
         {fileList.map((file) => (
-          <div key={file.id} style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            key={file.id}
+            style={{ display: "flex", flexDirection: "column" }}
+          >
             <img
               onClick={() => {
                 downloadFile(file.id);
@@ -147,6 +153,12 @@ const ImageList = () => {
               alt="image"
               style={{ width: "150px", height: "150px" }}
             />
+            <p className="img-sub">Name: {file.fileName}</p>
+            <p className="img-sub">Size: {file.fileSize}</p>
+            <p className="img-sub">Type: {file.fileType}</p>
+            <p className="img-sub">
+              At: {dayjs(file.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+            </p>
           </div>
         ))}
       </div>
