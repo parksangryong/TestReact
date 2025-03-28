@@ -59,6 +59,7 @@ const BoardDetail = () => {
     const params = {
       offset: 0,
       count: 10,
+      boardId: Number(id),
     };
     const response = await fetchCommentList(params);
     setCommentList(response.commentList);
@@ -239,6 +240,15 @@ const BoardDetail = () => {
           paddingTop: "30px",
         }}
       >
+        <p
+          style={{
+            fontSize: 14,
+            fontFamily: "Bungee Inline",
+            paddingLeft: 10,
+          }}
+        >
+          Comment
+        </p>
         {commentList.map((comment) => (
           <CommentList
             key={comment.id}
