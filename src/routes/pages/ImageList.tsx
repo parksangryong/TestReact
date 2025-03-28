@@ -127,18 +127,29 @@ const ImageList = () => {
           </>
         )}
       </div>
-      {fileList.map((file) => (
-        <div key={file.id}>
-          <img
-            onClick={() => {
-              downloadFile(file.id);
-            }}
-            src={`http://localhost:3002/${file.fileUrl}`}
-            alt="image"
-            style={{ width: "100px", height: "100px" }}
-          />
-        </div>
-      ))}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "10px",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          paddingTop: "30px",
+        }}
+      >
+        {fileList.map((file) => (
+          <div key={file.id} style={{ display: "flex", flexDirection: "row" }}>
+            <img
+              onClick={() => {
+                downloadFile(file.id);
+              }}
+              src={`http://localhost:3002/${file.fileUrl}`}
+              alt="image"
+              style={{ width: "150px", height: "150px" }}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
