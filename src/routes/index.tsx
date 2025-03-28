@@ -17,6 +17,10 @@ import BoardDetail from "./pages/BoardDetail";
 import "mirr-ui/styles";
 import "@fontsource/noto-sans/400.css"; // Specify weight
 import "@fontsource/noto-sans/400-italic.css"; // Specify weight and style
+import "@fontsource/bungee-tint/400.css"; // Specify weight
+import "@fontsource/bungee-shade/400.css"; // Specify weight
+import "@fontsource/bungee-inline/400.css"; // Specify weight
+import "@fontsource/bungee-hairline/400.css";
 
 const loader = () => {
   const token = localStorage.getItem("token");

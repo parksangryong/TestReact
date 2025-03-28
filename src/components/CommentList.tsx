@@ -1,14 +1,20 @@
 import { useState } from "react";
 type CommentListProps = {
-  comment: { id: number; content: string; userId: number; boardId: number };
+  comment: {
+    id: number;
+    content: string;
+    userId: number;
+    boardId: number;
+    username: string;
+  };
   handleDelete: (id: number) => void;
   handleUpdate: (id: number, content: string) => void;
 };
 
-import { PrimaryButton } from "mirr-ui";
 import FullInput from "./FullInput";
 import { getData } from "../utils/AsyncStorage";
 import { USER_ID_KEY } from "../services/config/config";
+import SmallButton from "./SmallButton";
 
 const CommentList = ({
   comment,
@@ -26,6 +32,7 @@ const CommentList = ({
         border: "1px solid black",
         display: "flex",
         flexDirection: "column",
+        borderRadius: "10px",
         padding: 10,
       }}
     >
@@ -48,9 +55,21 @@ const CommentList = ({
               onChange={(e) => setUpdateText(e.target.value)}
             />
           ) : (
-            <span style={{ fontSize: "13px", fontWeight: "regular" }}>
-              {comment.content}
-            </span>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                justifyContent: "space-between",
+                padding: "0 10px",
+              }}
+            >
+              <span style={{ fontSize: "14px", fontWeight: "bold" }}>
+                {comment.content}
+              </span>
+              <span style={{ fontSize: "11px", fontWeight: "regular" }}>
+                {comment.username}
+              </span>
+            </div>
           )}
         </p>
       </div>
@@ -62,16 +81,18 @@ const CommentList = ({
             width: "100%",
             gap: "10px",
             flex: 1,
+            justifyContent: "flex-end",
+            paddingRight: "10px",
           }}
         >
           {!isUpdate ? (
-            <PrimaryButton theme="social" onClick={() => setIsUpdate(true)}>
+            <SmallButton theme="secondary" onClick={() => setIsUpdate(true)}>
               Update
-            </PrimaryButton>
+            </SmallButton>
           ) : (
             <>
-              <PrimaryButton
-                theme="social"
+              <SmallButton
+                theme="secondary"
                 onClick={() => {
                   handleUpdate(comment.id, updateText);
 
@@ -79,13 +100,13 @@ const CommentList = ({
                 }}
               >
                 Save
-              </PrimaryButton>
-              <PrimaryButton
-                theme="dark"
+              </SmallButton>
+              <SmallButton
+                theme="tertiary"
                 onClick={() => handleDelete(comment.id)}
               >
                 Delete
-              </PrimaryButton>
+              </SmallButton>
             </>
           )}
         </div>

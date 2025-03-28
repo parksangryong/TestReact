@@ -3,17 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useForm, FieldValues } from "react-hook-form";
 import BoardList from "../../components/BoardList";
 import FullInput from "../../components/FullInput";
-import { PrimaryButton } from "mirr-ui";
 
 import {
   fetchBoardCreate,
-  fetchBoardDelete,
   fetchBoardList,
-  fetchBoardUpdate,
 } from "../../services/api/boardService";
 import { fetchLogout } from "../../services/api/authService";
 import { getData } from "../../utils/AsyncStorage";
 import { USER_ID_KEY } from "../../services/config/config";
+import { FaSignOutAlt } from "react-icons/fa";
+import MediumButton from "../../components/MediumButton";
 
 const Home = () => {
   const [boards, setBoards] = useState<
@@ -43,24 +42,6 @@ const Home = () => {
     reset();
   };
 
-  const handleDelete = async (id: number) => {
-    await fetchBoardDelete(id);
-    getBoards();
-  };
-
-  const handleUpdate = async (
-    id: number,
-    data: { title: string; content: string }
-  ) => {
-    const params = {
-      userId: Number(userId),
-      title: data.title,
-      content: data.content,
-    };
-    await fetchBoardUpdate(id, params);
-    getBoards();
-  };
-
   const logout = async () => {
     await fetchLogout();
     navigate("/auth/login");
@@ -76,15 +57,16 @@ const Home = () => {
         padding: "10px",
         display: "flex",
         flexDirection: "column",
+        marginBottom: "30px",
         flex: 1,
       }}
     >
       <button
         style={{
-          width: "50px",
-          height: "50px",
+          width: "80px",
+          height: "40px",
           borderRadius: "30px",
-          backgroundColor: "var(--color-primary)",
+          backgroundColor: "#bb0000",
           color: "white",
           border: "none",
           display: "flex",
@@ -93,15 +75,13 @@ const Home = () => {
           position: "fixed",
           bottom: "20px",
           right: "20px",
-          fontSize: "10px",
-          fontWeight: "bold",
           cursor: "pointer",
         }}
         onClick={() => {
           logout();
         }}
       >
-        Logout
+        <FaSignOutAlt size={20} />
       </button>
       <div
         style={{
@@ -110,7 +90,7 @@ const Home = () => {
           gap: "10px",
           paddingBottom: "15px",
           marginBottom: "15px",
-          borderBottom: "2px solid var(--color-primary)",
+          borderBottom: "3px dotted #dd0000",
         }}
       >
         <form
@@ -118,16 +98,28 @@ const Home = () => {
             display: "flex",
             flexDirection: "column",
             gap: "10px",
+            margin: "30px",
           }}
         >
-          <FullInput {...register("title")} placeholder="제목" />
-          <FullInput {...register("content")} placeholder="내용" />
-          <PrimaryButton theme="social" onClick={handleSubmit(onSubmit)}>
+          <span style={{ fontSize: "14px", fontFamily: "Bungee Inline" }}>
             Write Boards
-          </PrimaryButton>
+          </span>
+          <FullInput {...register("title")} placeholder="Title" />
+          <FullInput {...register("content")} placeholder="Content" />
+          <MediumButton theme="primary" onClick={handleSubmit(onSubmit)}>
+            Write
+          </MediumButton>
         </form>
       </div>
-      <h1 style={{ fontSize: "24px", fontWeight: "bold" }}>Boards</h1>
+      <h1
+        style={{
+          fontSize: "15px",
+          fontFamily: "Bungee Inline",
+          padding: "10px",
+        }}
+      >
+        Boards
+      </h1>
       <div
         style={{
           display: "flex",
@@ -138,12 +130,7 @@ const Home = () => {
         }}
       >
         {boards.map((board) => (
-          <BoardList
-            key={board.id}
-            board={board}
-            handleDelete={(id) => handleDelete(id)}
-            handleUpdate={(id, data) => handleUpdate(id, data)}
-          />
+          <BoardList key={board.id} board={board} />
         ))}
       </div>
     </div>

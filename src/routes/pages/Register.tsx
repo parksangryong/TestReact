@@ -1,8 +1,8 @@
-import { PrimaryButton } from "mirr-ui";
 import { useForm, FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import FullInput from "../../components/FullInput";
 import { fetchRegister } from "../../services/api/authService";
+import MediumButton from "../../components/MediumButton";
 const Register = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -29,9 +29,13 @@ const Register = () => {
       }}
     >
       <h1
-        style={{ fontSize: "24px", fontWeight: "bold", padding: "30px 0 0 0" }}
+        style={{
+          fontSize: "14px",
+          padding: "30px 10px 0 10px",
+          fontFamily: "Bungee Inline",
+        }}
       >
-        회원가입
+        REGISTER
       </h1>
       <form
         style={{
@@ -42,30 +46,30 @@ const Register = () => {
       >
         <FullInput
           {...register("email", { required: true })}
-          placeholder="이메일"
+          placeholder="Email"
         />
         <FullInput
           {...register("name", { required: true })}
-          placeholder="이름"
+          placeholder="Name"
         />
 
         <FullInput
           {...register("age", { required: true })}
-          placeholder="나이"
+          placeholder="Age"
           type="number"
         />
         <FullInput
           {...register("password", { required: true })}
-          placeholder="비밀번호"
+          placeholder="Password"
           type="password"
         />
-        <PrimaryButton theme="social" onClick={handleSubmit(onSubmit)}>
-          회원가입
-        </PrimaryButton>
+        <MediumButton theme="primary" onClick={handleSubmit(onSubmit)}>
+          JOIN
+        </MediumButton>
       </form>
-      <PrimaryButton theme="dark" onClick={() => navigate("/auth/login")}>
-        로그인페이지로 이동
-      </PrimaryButton>
+      <MediumButton theme="secondary" onClick={() => navigate("/auth/login")}>
+        BACK
+      </MediumButton>
     </div>
   );
 };
