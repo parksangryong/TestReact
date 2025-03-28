@@ -156,6 +156,9 @@ const BoardDetail = () => {
               fontSize: "20px",
               fontWeight: "bold",
               paddingBottom: "10px",
+              display: "flex",
+              gap: "10px",
+              alignItems: "center",
             }}
           >
             <span
@@ -187,6 +190,9 @@ const BoardDetail = () => {
               fontWeight: "regular",
               paddingBottom: "10px",
               minHeight: "120px",
+              display: "flex",
+              gap: "10px",
+              alignItems: "flex-start",
             }}
           >
             <span
@@ -194,7 +200,7 @@ const BoardDetail = () => {
                 fontSize: "10px",
                 fontFamily: "Bungee Inline",
                 position: "relative",
-                top: "1px",
+                top: "7px",
               }}
             >
               Content :
