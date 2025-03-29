@@ -11,6 +11,7 @@ import {
 import { getData } from "../../utils/AsyncStorage";
 import { USER_ID_KEY } from "../../services/config/config";
 import MediumButton from "../../components/MediumButton";
+import { toast } from "react-hot-toast";
 
 const Home = () => {
   const [boards, setBoards] = useState<
@@ -34,9 +35,11 @@ const Home = () => {
       content: data.content,
       userId: Number(userId),
     };
-    await fetchBoardCreate(params);
-    getBoards();
-    reset();
+    await fetchBoardCreate(params).then(() => {
+      toast.success("게시글이 작성되었습니다.");
+      getBoards();
+      reset();
+    });
   };
 
   useEffect(() => {
