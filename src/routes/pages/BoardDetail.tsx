@@ -1,22 +1,29 @@
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
+
+// components
 import FullInput from "../../components/FullInput";
+import CommentList from "../../components/CommentList";
+import MediumButton from "../../components/MediumButton";
+import SmallButton from "../../components/SmallButton";
+
+// services
 import {
   fetchCommentList,
   fetchCommentCreate,
   fetchCommentDelete,
   fetchCommentUpdate,
 } from "../../services/api/commentService";
-import { useEffect, useState } from "react";
-import CommentList from "../../components/CommentList";
+
+// utils
 import { getData } from "../../utils/AsyncStorage";
 import { USER_ID_KEY } from "../../services/config/config";
-import {
-  fetchBoardDelete,
-  fetchBoardUpdate,
-} from "../../services/api/boardService";
-import MediumButton from "../../components/MediumButton";
-import SmallButton from "../../components/SmallButton";
+
+// icons
 import { FaLock } from "react-icons/fa";
+
+// hooks
+import { useBoardDelete, useBoardUpdate } from "../../hooks/useBoard";
 
 type Comment = {
   id: number;
@@ -38,21 +45,25 @@ const BoardDetail = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const userId = getData(USER_ID_KEY)?.idx;
 
-  const navigate = useNavigate();
+  const { mutateAsync: deleteBoard } = useBoardDelete();
+  const { mutateAsync: updateBoard } = useBoardUpdate();
 
   const handleDelete = async () => {
-    await fetchBoardDelete(Number(id));
-    navigate("/", { replace: true });
+    await deleteBoard(Number(id));
   };
 
   const handleUpdate = async () => {
     const params = {
-      userId: Number(userId),
-      title: boardData.title,
-      content: boardData.content,
+      data: {
+        userId: Number(userId),
+        title: boardData.title,
+        content: boardData.content,
+      },
+      id: Number(id),
     };
-    await fetchBoardUpdate(Number(id), params);
-    setIsUpdate(false);
+    await updateBoard(params).then(() => {
+      setIsUpdate(false);
+    });
   };
 
   const getCommentList = async () => {

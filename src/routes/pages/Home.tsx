@@ -1,33 +1,30 @@
-import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
+
+// components
 import BoardList from "../../components/BoardList";
 import FullInput from "../../components/FullInput";
+import MediumButton from "../../components/MediumButton";
 
-import {
-  fetchBoardCreate,
-  fetchBoardList,
-} from "../../services/api/boardService";
-
+// utils
 import { getData } from "../../utils/AsyncStorage";
 import { USER_ID_KEY } from "../../services/config/config";
-import MediumButton from "../../components/MediumButton";
-import { toast } from "react-hot-toast";
+
+// hooks
+import { useBoardList, useBoardCreate } from "../../hooks/useBoard";
 
 const Home = () => {
-  const [boards, setBoards] = useState<
-    { id: number; title: string; content: string; userId: number }[]
-  >([]);
   const { register, handleSubmit, reset } = useForm();
   const userId = getData(USER_ID_KEY)?.idx;
 
-  const getBoards = async () => {
-    const params = {
-      offset: 0,
-      count: 30,
-    };
-    const response = await fetchBoardList(params);
-    setBoards(response.boardList);
-  };
+  const { mutateAsync: createBoard } = useBoardCreate();
+  const {
+    data: boards,
+    isLoading,
+    isError,
+  } = useBoardList({
+    offset: 0,
+    count: 30,
+  });
 
   const onSubmit = async (data: FieldValues) => {
     const params = {
@@ -35,16 +32,10 @@ const Home = () => {
       content: data.content,
       userId: Number(userId),
     };
-    await fetchBoardCreate(params).then(() => {
-      toast.success("게시글이 작성되었습니다.");
-      getBoards();
+    await createBoard(params).then(() => {
       reset();
     });
   };
-
-  useEffect(() => {
-    getBoards();
-  }, []);
 
   return (
     <div
@@ -102,9 +93,17 @@ const Home = () => {
           height: "100%",
         }}
       >
-        {boards.map((board) => (
-          <BoardList key={board.id} board={board} />
-        ))}
+        {isLoading && <div>Loading...</div>}
+        {isError && <div>Error</div>}
+        {boards &&
+          boards.map(
+            (board: {
+              id: number;
+              title: string;
+              content: string;
+              userId: number;
+            }) => <BoardList key={board.id} board={board} />
+          )}
       </div>
     </div>
   );
