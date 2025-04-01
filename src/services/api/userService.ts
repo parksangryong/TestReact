@@ -12,13 +12,19 @@ export const fetchUserDetail = async (id: number) => {
 };
 
 export interface UpdateUser {
-  name: string;
-  age: number;
-  password: string;
+  data: {
+    name: string;
+    age: number;
+    password: string;
+  };
+  id: number;
 }
 
-export const updateUser = async (id: number, data: UpdateUser) => {
-  const response = await patch(API_ENDPOINTS.USER.PATCH + id, data);
+export const updateUser = async (params: UpdateUser) => {
+  const response = await patch(
+    API_ENDPOINTS.USER.PATCH + params.id,
+    params.data
+  );
   return response;
 };
 

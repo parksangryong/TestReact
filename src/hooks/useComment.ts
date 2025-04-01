@@ -24,7 +24,6 @@ export const useCommentList = ({
     queryKey: ["comments", offset, count],
     queryFn: async () => {
       const response = await fetchCommentList({ offset, count, boardId });
-      console.log("response", response);
       return response.commentList;
     },
   });

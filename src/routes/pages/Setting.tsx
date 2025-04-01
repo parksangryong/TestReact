@@ -1,60 +1,35 @@
-import { useEffect, useState } from "react";
-import { fetchUserDetail, updateUser } from "../../services/api/userService";
-
-import { USER_ID_KEY } from "../../services/config/config";
+// components
 import FullInput from "../../components/FullInput";
-import { getData } from "../../utils/AsyncStorage";
 import MediumButton from "../../components/MediumButton";
-import { useNavigate } from "react-router-dom";
 
-type UpdateUserState = {
-  name: string;
-  age: number;
-  password: string;
-  email: string;
-};
+// utils
+import { USER_ID_KEY } from "../../services/config/config";
+import { getData } from "../../utils/AsyncStorage";
+
+// hooks
+import { useUserUpdate, useUserDetail } from "../../hooks/useUser";
+
+// packages
+import { FieldValues, useForm } from "react-hook-form";
 
 const Setting = () => {
-  const navigate = useNavigate();
   const userId = getData(USER_ID_KEY)?.idx;
-  const [user, setUser] = useState<UpdateUserState>({
-    name: "",
-    age: 0,
-    password: "",
-    email: "",
-  });
+  const { register, handleSubmit } = useForm();
 
-  const getUser = async () => {
-    const res = await fetchUserDetail(Number(userId));
-    const user = res.user[0];
-    setUser({
-      name: user.name,
-      age: user.age,
-      password: user.password,
-      email: user.email,
-    });
-  };
+  const { data: userData } = useUserDetail(Number(userId));
+  const { mutateAsync: updateUser } = useUserUpdate();
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
-  const handleChange =
-    (field: keyof UpdateUserState) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setUser((prev) => ({
-        ...prev,
-        [field]: e.target.value,
-      }));
+  const onSubmit = async (data: FieldValues) => {
+    const params = {
+      name: data.name === "" ? userData?.name : data.name,
+      age: data.age === "" ? userData?.age : data.age,
+      password: data.password === "" ? userData?.password : data.password,
     };
 
-  const handleSubmit = async () => {
-    await updateUser(Number(userId), {
-      name: user.name,
-      age: user.age,
-      password: user.password,
+    await updateUser({
+      id: Number(userId),
+      data: params,
     });
-    navigate("/");
   };
 
   return (
@@ -67,38 +42,52 @@ const Setting = () => {
         gap: "10px",
       }}
     >
-      <span
+      <form
         style={{
-          fontSize: "16px",
-          paddingTop: "20px",
-          fontFamily: "Bungee Inline",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
         }}
       >
-        User Setting
-      </span>
-      <FullInput
-        placeholder="E-mail"
-        value={user?.email}
-        disabled
-        onChange={handleChange("email")}
-      />
-      <FullInput
-        placeholder="Name"
-        value={user?.name}
-        onChange={handleChange("name")}
-      />
-      <FullInput
-        placeholder="Age"
-        value={user?.age}
-        onChange={handleChange("age")}
-      />
-      <FullInput
-        placeholder="Password"
-        type="password"
-        value={user?.password}
-        onChange={handleChange("password")}
-      />
-      <MediumButton onClick={handleSubmit}>Edit</MediumButton>
+        <span
+          style={{
+            fontSize: "16px",
+            paddingTop: "20px",
+            fontFamily: "Bungee Inline",
+          }}
+        >
+          User Setting
+        </span>
+        <FullInput
+          {...register("email")}
+          placeholder="E-mail"
+          defaultValue={userData?.email}
+          disabled
+        />
+        <FullInput
+          {...register("name")}
+          placeholder="Name"
+          defaultValue={userData?.name}
+        />
+        <FullInput
+          {...register("age")}
+          placeholder="Age"
+          defaultValue={userData?.age}
+        />
+        <FullInput
+          {...register("password")}
+          placeholder="Password"
+          type="password"
+          defaultValue={userData?.password}
+        />
+        <MediumButton
+          theme="primary"
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
+        >
+          Edit
+        </MediumButton>
+      </form>
     </div>
   );
 };

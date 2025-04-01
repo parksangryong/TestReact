@@ -22,7 +22,6 @@ export const useBoardList = ({
     queryKey: ["boards", offset, count],
     queryFn: async () => {
       const response = await fetchBoardList({ offset, count });
-      console.log("response", response);
       return response.boardList;
     },
   });
