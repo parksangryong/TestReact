@@ -35,6 +35,7 @@ export const useAuth = () => {
       storeData(REFRESH_TOKEN_KEY, response.refreshToken);
       storeData(USER_ID_KEY, { idx: decode.userId.toString() });
       navigate("/");
+      toast.success("로그인에 성공했습니다.");
     },
     onError: () => {
       toast.error("로그인에 실패했습니다.");
@@ -53,6 +54,7 @@ export const useRegister = () => {
       storeData(REFRESH_TOKEN_KEY, response.refreshToken);
       storeData(USER_ID_KEY, { idx: decode.userId.toString() });
       navigate("/auth/login");
+      toast.success("회원가입에 성공했습니다.");
     },
     onError: () => {
       toast.error("회원가입에 실패했습니다.");
@@ -70,6 +72,7 @@ export const useLogout = () => {
       removeData(REFRESH_TOKEN_KEY);
       removeData(USER_ID_KEY);
       navigate("/auth/login");
+      toast.success("로그아웃에 성공했습니다.");
     },
     onError: () => {
       toast.error("로그아웃에 실패했습니다.");
