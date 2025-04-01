@@ -17,11 +17,7 @@ const Home = () => {
   const userId = getData(USER_ID_KEY)?.idx;
 
   const { mutateAsync: createBoard } = useBoardCreate();
-  const {
-    data: boards,
-    isLoading,
-    isError,
-  } = useBoardList({
+  const { data: boards } = useBoardList({
     offset: 0,
     count: 30,
   });
@@ -93,8 +89,6 @@ const Home = () => {
           height: "100%",
         }}
       >
-        {isLoading && <div>Loading...</div>}
-        {isError && <div>Error</div>}
         {boards &&
           boards.map(
             (board: {

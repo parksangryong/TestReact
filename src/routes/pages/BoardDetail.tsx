@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 // components
@@ -6,14 +6,6 @@ import FullInput from "../../components/FullInput";
 import CommentList from "../../components/CommentList";
 import MediumButton from "../../components/MediumButton";
 import SmallButton from "../../components/SmallButton";
-
-// services
-import {
-  fetchCommentList,
-  fetchCommentCreate,
-  fetchCommentDelete,
-  fetchCommentUpdate,
-} from "../../services/api/commentService";
 
 // utils
 import { getData } from "../../utils/AsyncStorage";
@@ -24,29 +16,35 @@ import { FaLock } from "react-icons/fa";
 
 // hooks
 import { useBoardDelete, useBoardUpdate } from "../../hooks/useBoard";
-
-type Comment = {
-  id: number;
-  content: string;
-  userId: number;
-  boardId: number;
-  username: string;
-};
+import {
+  useCommentList,
+  useCommentCreate,
+  useCommentUpdate,
+  useCommentDelete,
+} from "../../hooks/useComment";
 
 const BoardDetail = () => {
   const { id } = useParams();
+  const userId = getData(USER_ID_KEY)?.idx;
   const { title, content, idx } = useLocation().state;
+
   const [boardData, setBoardData] = useState({
     title: title,
     content: content,
   });
-  const [commentList, setCommentList] = useState<Comment[]>([]);
   const [comment, setComment] = useState("");
   const [isUpdate, setIsUpdate] = useState(false);
-  const userId = getData(USER_ID_KEY)?.idx;
 
   const { mutateAsync: deleteBoard } = useBoardDelete();
   const { mutateAsync: updateBoard } = useBoardUpdate();
+  const { mutateAsync: createCommentMutation } = useCommentCreate();
+  const { mutateAsync: updateCommentMutation } = useCommentUpdate();
+  const { mutateAsync: deleteCommentMutation } = useCommentDelete();
+  const { data: commentList } = useCommentList({
+    offset: 0,
+    count: 10,
+    boardId: Number(id),
+  });
 
   const handleDelete = async () => {
     await deleteBoard(Number(id));
@@ -66,43 +64,28 @@ const BoardDetail = () => {
     });
   };
 
-  const getCommentList = async () => {
-    const params = {
-      offset: 0,
-      count: 10,
-      boardId: Number(id),
-    };
-    const response = await fetchCommentList(params);
-    setCommentList(response.commentList);
-  };
-
   const createComment = async () => {
-    await fetchCommentCreate({
+    await createCommentMutation({
       boardId: Number(id),
       content: comment,
       userId: Number(userId),
     });
-    setComment("");
-    getCommentList();
   };
 
   const deleteComment = async (commentId: number) => {
-    await fetchCommentDelete(commentId);
-    getCommentList();
+    await deleteCommentMutation(commentId);
   };
 
   const updateComment = async (commentId: number, content: string) => {
-    await fetchCommentUpdate(commentId, {
-      content: content,
-      userId: Number(userId),
-      boardId: Number(id),
+    await updateCommentMutation({
+      id: commentId,
+      data: {
+        content: content,
+        userId: Number(userId),
+        boardId: Number(id),
+      },
     });
-    getCommentList();
   };
-
-  useEffect(() => {
-    getCommentList();
-  }, []);
 
   return (
     <div
@@ -270,14 +253,25 @@ const BoardDetail = () => {
         >
           Comment
         </p>
-        {commentList.map((comment) => (
-          <CommentList
-            key={comment.id}
-            comment={comment}
-            handleDelete={deleteComment}
-            handleUpdate={updateComment}
-          />
-        ))}
+        {commentList &&
+          commentList.map(
+            (comment: {
+              id: number;
+              content: string;
+              userId: number;
+              boardId: number;
+              createdAt: string;
+              updatedAt: string;
+              username: string;
+            }) => (
+              <CommentList
+                key={comment.id}
+                comment={comment}
+                handleDelete={deleteComment}
+                handleUpdate={updateComment}
+              />
+            )
+          )}
       </div>
     </div>
   );
