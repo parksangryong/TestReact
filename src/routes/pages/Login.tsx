@@ -1,12 +1,17 @@
 import { useForm, FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+
+// components
 import FullInput from "../../components/FullInput";
-import { fetchLogin } from "../../services/api/authService";
 import MediumButton from "../../components/MediumButton";
+
+// hooks
+import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { mutateAsync: login } = useAuth();
 
   const onSubmit = async (data: FieldValues) => {
     const params = {
@@ -14,8 +19,7 @@ const Login = () => {
       password: data.password,
     };
 
-    await fetchLogin(params);
-    navigate("/");
+    await login(params);
   };
 
   return (

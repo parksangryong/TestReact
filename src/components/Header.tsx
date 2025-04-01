@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
+// icons
 import {
   FaArrowAltCircleDown,
   FaArrowAltCircleUp,
@@ -7,14 +9,17 @@ import {
   FaHome,
   FaImage,
   FaSignOutAlt,
+  FaCog,
 } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
 
-import { fetchLogout } from "../services/api/authService";
-
+// utils
 import { getData } from "../utils/AsyncStorage";
+
+// constants
 import { USER_ID_KEY } from "../services/config/config";
-import { FaGear } from "react-icons/fa6";
+
+// hooks
+import { useLogout } from "../hooks/useAuth";
 
 const Header = () => {
   const userId = getData(USER_ID_KEY)?.idx;
@@ -22,9 +27,10 @@ const Header = () => {
 
   const [isOpen, setIsOpen] = useState(true);
 
+  const { mutateAsync: logoutMutate } = useLogout();
+
   const logout = async () => {
-    await fetchLogout();
-    navigate("/auth/login");
+    await logoutMutate();
   };
 
   return (
@@ -100,7 +106,7 @@ const Header = () => {
           <FaImage />
         </NavLink>
         <NavLink to="/setting" className="header-nav-link">
-          <FaGear />
+          <FaCog />
         </NavLink>
       </div>
     </>

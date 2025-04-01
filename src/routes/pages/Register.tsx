@@ -1,11 +1,17 @@
 import { useForm, FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+
+// components
 import FullInput from "../../components/FullInput";
-import { fetchRegister } from "../../services/api/authService";
 import MediumButton from "../../components/MediumButton";
+
+// hooks
+import { useRegister } from "../../hooks/useAuth";
+
 const Register = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const { mutateAsync: registerMutate } = useRegister();
 
   const onSubmit = async (data: FieldValues) => {
     const params = {
@@ -14,8 +20,7 @@ const Register = () => {
       age: data.age,
       password: data.password,
     };
-    await fetchRegister(params);
-    navigate("/");
+    await registerMutate(params);
   };
 
   return (
