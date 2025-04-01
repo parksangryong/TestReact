@@ -1,28 +1,29 @@
+import { useState } from "react";
+
+// components
 import SmallButton from "../../components/SmallButton";
-import { useEffect, useState } from "react";
-import {
-  fetchUploadFile,
-  fetchUploadList,
-  fetchDownloadFile,
-} from "../../services/api/uploadService";
+
+// utils
 import { getData } from "../../utils/AsyncStorage";
 import { USER_ID_KEY } from "../../services/config/config";
+
+// packages
 import dayjs from "dayjs";
-type ListType = {
-  id: number;
-  userId: string;
-  fileUrl: string;
-  fileName: string;
-  fileSize: number;
-  fileType: string;
-  createdAt: string;
-  updatedAt: string;
-};
+
+// hooks
+import {
+  useUploadList,
+  useUploadFile,
+  useDownloadFile,
+} from "../../hooks/useUplaod";
 
 const ImageList = () => {
   const userId = getData(USER_ID_KEY)?.idx;
   const [file, setFile] = useState<File | null>(null);
-  const [fileList, setFileList] = useState<ListType[]>([]);
+
+  const { data: uploadList } = useUploadList();
+  const { mutateAsync: uploadFile } = useUploadFile();
+  const { mutateAsync: downloadFileMutation } = useDownloadFile();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,41 +40,14 @@ const ImageList = () => {
 
   const handleUpload = async () => {
     if (!file) return;
-    await fetchUploadFile(file, Number(userId))
-      .then(() => {
-        setFile(null);
-      })
-      .then(() => {
-        getUploadList();
-      });
-  };
-
-  const getUploadList = async () => {
-    const res = await fetchUploadList();
-    setFileList(res.files);
+    await uploadFile({ file, userId: Number(userId) }).then(() => {
+      setFile(null);
+    });
   };
 
   const downloadFile = async (id: number) => {
-    try {
-      const res = await fetchDownloadFile(id);
-      const response = await fetch(`http://localhost:3002/${res.url}`);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = res.url.split("/").pop() || "image";
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-    } catch (error) {
-      console.log(error);
-    }
+    await downloadFileMutation(id);
   };
-
-  useEffect(() => {
-    getUploadList();
-  }, []);
 
   return (
     <div
@@ -140,27 +114,37 @@ const ImageList = () => {
           paddingTop: "30px",
         }}
       >
-        {fileList.map((file) => (
-          <div
-            key={file.id}
-            style={{ display: "flex", flexDirection: "column" }}
-          >
-            <img
-              onClick={() => {
-                downloadFile(file.id);
-              }}
-              src={`http://localhost:3002/${file.fileUrl}`}
-              alt="image"
-              style={{ width: "150px", height: "150px" }}
-            />
-            <p className="img-sub">Name: {file.fileName}</p>
-            <p className="img-sub">Size: {file.fileSize}</p>
-            <p className="img-sub">Type: {file.fileType}</p>
-            <p className="img-sub">
-              At: {dayjs(file.createdAt).format("YYYY-MM-DD HH:mm:ss")}
-            </p>
-          </div>
-        ))}
+        {uploadList &&
+          uploadList?.map(
+            (file: {
+              id: number;
+              fileUrl: string;
+              fileName: string;
+              fileSize: number;
+              fileType: string;
+              createdAt: string;
+            }) => (
+              <div
+                key={file.id}
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                <img
+                  onClick={() => {
+                    downloadFile(file.id);
+                  }}
+                  src={`http://localhost:3002/${file.fileUrl}`}
+                  alt="image"
+                  style={{ width: "150px", height: "150px" }}
+                />
+                <p className="img-sub">Name: {file.fileName}</p>
+                <p className="img-sub">Size: {file.fileSize}</p>
+                <p className="img-sub">Type: {file.fileType}</p>
+                <p className="img-sub">
+                  At: {dayjs(file.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                </p>
+              </div>
+            )
+          )}
       </div>
     </div>
   );

@@ -1,10 +1,15 @@
 import { API_ENDPOINTS } from "../config/config";
 import { post, get, del } from "../config/request";
 
-export const fetchUploadFile = async (file: File, userId: number) => {
+interface UploadFileParams {
+  file: File;
+  userId: number;
+}
+
+export const fetchUploadFile = async (params: UploadFileParams) => {
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("userId", userId.toString());
+  formData.append("file", params.file);
+  formData.append("userId", params.userId.toString());
 
   const response = await post(API_ENDPOINTS.UPLOAD.FILE, formData, {
     headers: {
